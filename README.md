@@ -1,1 +1,1 @@
-# example-spring-wss
+master
