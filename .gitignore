@@ -1,0 +1,15 @@
+.project
+.classpath
+.settings
+.metadata
+target
+**/target
+**/.classpath
+**/.settings
+**/.project
+**/.metadata
+
+**/build
+**/lib
+repository
+ivycache

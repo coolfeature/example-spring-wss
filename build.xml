@@ -1,0 +1,35 @@
+
+
+<project name="wss"  xmlns:ivy="antlib:org.apache.ivy.ant">
+         
+	<property name="ivy.jar.dir" value="${user.home}/.ivy2/jars" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+
+    <property name="build.dir" value="build" />
+    <property name="src.dir" value="src/main/java" />
+    
+    <!-- Assuming IVY is already loaded e.g. in ANT's lib dir -->
+         
+	<target name="buildlist"> 
+		<ivy:buildlist reference="build-path">
+			<fileset dir="${basedir}" includes="*/build.xml"/>
+		</ivy:buildlist>
+	</target>
+  
+	<target name="publish-all" depends="buildlist" description="compile, jar and publish all projects in the right order">
+		<subant target="publish" buildpathref="build-path" />
+	</target>
+	
+	<!-- CLEAN -->
+	<target name="clean-all" depends="buildlist" 
+		description="clean all projects">
+		<subant target="clean" buildpathref="build-path" />
+	</target>
+  
+	<target name="clean" depends="clean-all" 
+		description="clean tutorial: delete repository, ivy cache, and all projects">
+		<delete dir="repository"/>
+		<ivy:cleancache />
+	</target>
+  
+</project>
