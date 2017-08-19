@@ -16,17 +16,14 @@
    specific language governing permissions and limitations
    under the License.    
 -->
-<project name="wss-controller" xmlns:ivy="antlib:org.apache.ivy.ant" default="compile">
+<project name="wss-model" xmlns:ivy="antlib:org.apache.ivy.ant" default="compile">
 	<property file="build.properties"/>
-	
 	<import file="${common.dir}/common.xml"/>
 	
 	<target name="buildlist"> 
 		<ivy:buildlist reference="build-path">
-			<fileset dir="${common.dir}" includes="wss-model/build.xml"/>
 			<fileset dir="${basedir}" includes="build.xml"/>
 		</ivy:buildlist>
 	</target>
-	
-	
+		
 </project>

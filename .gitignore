@@ -12,4 +12,4 @@ target
 **/build
 **/lib
 repository
-ivycache
+ivy-cache

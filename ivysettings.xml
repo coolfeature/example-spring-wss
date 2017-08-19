@@ -1,0 +1,31 @@
+<!-- 
+	http://ant.apache.org/ivy/history/latest-milestone/tutorial/dependence.html 
+-->
+<ivysettings>
+	<properties file="${common.dir}/ivysettings.properties"/>
+	<settings defaultResolver="libraries" />
+	<caches defaultCacheDir="${common.dir}/ivy-cache" />
+	<resolvers>
+		<!-- 
+		The filesystem resolver called "projects" is able to resolve the internal 
+		dependencies by locating them on the local filesystem. 
+		-->
+		<filesystem name="modules">
+			<artifact pattern="${repository.dir}/[artifact]-[revision].[ext]" />
+			<ivy pattern="${repository.dir}/[module]-[revision].xml" />
+		</filesystem>
+		<!-- 
+		The ibiblio resolver called "libraries" is able to find dependencies 
+		on the maven 2 repository, but doesn't use maven poms. 
+		-->
+		<ibiblio name="libraries" m2compatible="true" usepoms="false" />
+	</resolvers>
+	
+	<!--
+	The modules tag allows you to configure which resolver should be used for which module.
+	-->
+	<modules>
+		<module organisation="uk.co.ionas.example.spring" name="wss-model" resolver="modules"/>
+		<module organisation="uk.co.ionas.example.spring" name="wss-controller" resolver="modules"/>
+	</modules>
+</ivysettings>

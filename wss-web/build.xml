@@ -16,9 +16,22 @@
    specific language governing permissions and limitations
    under the License.    
 -->
-<project name="wss-web" default="compile">
+<project name="wss-web" xmlns:ivy="antlib:org.apache.ivy.ant" default="package">
 	<property file="build.properties"/>
 	
 	<import file="${common.dir}/common.xml"/>
+	
+	<target name="buildlist"> 
+		<ivy:buildlist reference="build-path">
+			<fileset dir="${common.dir}" includes="*/build.xml"/>
+		</ivy:buildlist>
+	</target>
+
+	<target name="package" depends="sub-publish" description="create a war file">
+		<war destfile="${build.dir}/${ant.project.name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+			<webinf dir="${web.dir}/WEB-INF" />
+			<lib dir="${lib.dir}/war" />
+		</war>
+	</target>
 	
 </project>

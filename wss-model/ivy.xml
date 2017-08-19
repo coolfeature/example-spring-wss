@@ -1,7 +1,7 @@
 <ivy-module version="1.0">
     <info 
 		organisation="uk.co.ionas.example.spring" 
-		module="wss-controller" 
+		module="wss-model" 
 		status="integration"/>
     <configurations>
     	<conf 
@@ -19,15 +19,11 @@
     </configurations>
 	<publications>
 		<artifact 
-			name="wss-controller" 
+			name="wss-model" 
 			type="jar" 
 			conf="core" />
     </publications>
     <dependencies>
-		<dependency 
-			name="wss-model" 
-			rev="latest.integration" 
-			conf="core" />
         <dependency 
 			org="junit" 
 			name="junit" 

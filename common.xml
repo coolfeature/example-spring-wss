@@ -1,46 +1,38 @@
 
 <project name="common" xmlns:ivy="antlib:org.apache.ivy.ant">
 
-	<property file="${common.dir}/build.properties"/>
+	<ivy:settings file="${common.dir}/ivysettings.xml" />
+	<property file="${common.dir}/common.properties"/>
+
 	
 	<property name="ivy.jar.dir" value="${user.home}/.ivy2/jars" />
 	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
 
+
     <path id="lib.path.id">
         <fileset dir="${lib.dir}" />
     </path>
+	
     <path id="run.path.id">
         <path refid="lib.path.id" />
         <path location="${classes.dir}" />
     </path>
 
     
-	<!-- setup ivy default configuration with some custom info -->
+	<!-- setup ivy default configuration with some custom info
 	<property name="ivy.local.default.root" value="${repository.dir}/local"/>
 	<property name="ivy.shared.default.root" value="${repository.dir}/shared"/>
-
-   	<!-- here is how we would have configured ivy if we had our own ivysettings file
-    <ivy:settings file="${common.dir}/ivysettings.xml" />
-    -->
-
-    <target name="resolve" depends="clean-lib" description="--> resolve and retrieve dependencies with ivy">
-        <mkdir dir="${lib.dir}"/> <!-- not usually necessary, ivy creates the directory IF there are dependencies -->
-    	
-    	<!-- the call to resolve is not mandatory, retrieve makes an implicit call if we don't 
-    	<ivy:resolve file="${ivy.file}"/> -->
-    	<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" />
-    </target>
-    
+	-->
 	
+    <!-- 
+	================================= 
+	targets
+	================================= 
+	-->
+  
 	
-    <!-- ================================= 
-          targets        
-         ================================= -->
-
 	<target name="ivy-new-version" unless="ivy.new.revision">
-    	<!-- default module version prefix value -->
 		<property name="module.version.prefix" value="${module.version.target}-dev-b" />
-		
     	<!-- asks to ivy an available version number -->
 		<ivy:info file="${ivy.file}" />
     	<ivy:buildnumber 
@@ -59,30 +51,25 @@
     	<!-- create version file in classpath for later inclusion in jar -->
         <mkdir dir="${classes.dir}"/>
 		<echo message="version=${ivy.new.revision}" file="${classes.dir}/${ant.project.name}.properties" append="false" />
-
 		<!-- load generated version properties file -->
         <property file="${classes.dir}/${ant.project.name}.properties" />
     </target>
 
-	
-	
 	<target name="report" depends="resolve" description="--> generates a report of dependencies">
         <ivy:report todir="${build.dir}"/>
     </target>
 
+	<target name="resolve" depends="clean-lib" description="--> resolve and retrieve dependencies with ivy">
+        <mkdir dir="${lib.dir}"/>
+    	<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" />
+    </target>
+	
     <target name="compile" depends="resolve" description="--> compile the project">
         <mkdir dir="${classes.dir}" />
         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="lib.path.id" debug="true" includeAntRuntime="false"/>
     </target>
 	
-    <target name="run" depends="version, compile" description="--> compile and run the project">
-
-    </target>
-	
-	
-    <!-- ================================= 
-          target: jar              
-         ================================= -->
+	<!-- PUBLISH -->
     <target name="jar" depends="version, compile" description="--> make a jar file for this project">
         <jar destfile="${jar.file}">
             <fileset dir="${classes.dir}" />
@@ -93,35 +80,29 @@
         </jar>
     </target>
 
-    <!-- ================================= 
-          target: publish              
-         ================================= -->
-    <target name="publish" depends="clean-build, jar" description="--> publish this project in the ivy repository">
-    	<ivy:publish artifactspattern="${build.dir}/[artifact].[ext]" 
-    			           resolver="shared"
-    			           pubrevision="${version}" 
-    			           status="release"
-    	/>
-        <echo message="project ${ant.project.name} released with version ${version}" />
-    </target>
-
-    <!-- ================================= 
-          target: publish-local              
-         ================================= -->
     <target name="publish-local" depends="local-version, jar" description="--> publish this project in the local ivy repository">
-    	<ivy:publish artifactspattern="${build.dir}/[artifact].[ext]" 
-    			        resolver="local"
-    			        pubrevision="${version}"
-				        pubdate="${now}"
-    			        status="integration"
-    					forcedeliver="true"
-    	/>
+		<ivy:publish artifactspattern="${build.dir}/[artifact].[ext]" 
+			resolver="local"
+			pubrevision="${version}"
+			pubdate="${now}"
+			status="integration"
+			forcedeliver="true"/>
         <echo message="project ${ant.project.name} published locally with version ${version}" />
     </target>
 
-	<!-- ================================= 
-          target: clean
-         ================================= -->
+	<target name="publish" depends="clean-build, jar" description="--> publish this project in the ivy repository">
+    	<ivy:publish artifactspattern="${build.dir}/[artifact].[ext]" 
+			resolver="modules"
+			pubrevision="${version}" 
+			status="release"/>
+		<echo message="project ${ant.project.name} released with version ${version}" />
+    </target>
+	
+	<target name="sub-publish" depends="buildlist" description="compile, jar and publish all projects in the right order">
+		<subant target="publish" buildpathref="build-path" />
+	</target>
+	
+	<!-- CLEAN -->
 	<target name="clean-local"  
 		description="--> cleans the local repository for the current module">
 		<ivy:info file="${ivy.file}" />
@@ -137,4 +118,12 @@
     </target>
 
     <target name="clean" depends="clean-build, clean-lib" description="--> clean the project" />
+	
+	<target name="clean-all" depends="buildlist" 
+		description="clean all projects">
+		<subant target="clean" buildpathref="build-path" />
+		<delete dir="repository"/>
+		<ivy:cleancache />
+	</target>
+  
 </project>
