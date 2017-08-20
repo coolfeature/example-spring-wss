@@ -18,16 +18,22 @@
 			description="Testing only"/>
     </configurations>
 	<publications>
-		<artifact 
-			name="wss-model" 
-			type="jar" 
-			conf="core" />
+		<artifact name="wss-model" type="jar" conf="core" />
     </publications>
-    <dependencies>
-        <dependency 
-			org="junit" 
-			name="junit" 
-			rev="3.8" 
-			conf="test->default"/>
+    <dependencies defaultconf="core->default">
+    	<dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" />
+    	<dependency org="org.springframework" name="spring-core" rev="4.3.0.RELEASE" />
+    	<dependency org="org.springframework" name="spring-expression" rev="4.3.0.RELEASE" />
+    	<dependency org="org.springframework" name="spring-beans" rev="4.3.0.RELEASE" />
+    	<dependency org="org.springframework" name="spring-context" rev="4.3.0.RELEASE" />
+    	<dependency org="org.springframework" name="spring-aop" rev="4.3.0.RELEASE" />
+    	<dependency org="org.springframework" name="spring-webmvc" rev="4.3.0.RELEASE" />
+    	<dependency org="org.springframework" name="spring-web" rev="4.3.0.RELEASE" />
+    	<dependency org="org.springframework" name="spring-test" rev="4.3.0.RELEASE" />
+    	<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.8.1" />
+    	<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.8.1" />
+    	<dependency org="org.apache.logging.log4j" name="log4j-jcl" rev="2.8.1" />
+    	<dependency org="commons-logging" name="commons-logging" rev="1.2" />
+        <dependency org="junit" name="junit" rev="3.8" conf="test->default"/>
     </dependencies>
 </ivy-module>

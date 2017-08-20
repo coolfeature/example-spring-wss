@@ -28,7 +28,7 @@
 	</target>
 
 	<target name="package" depends="sub-publish" description="create a war file">
-		<war destfile="${build.dir}/${ant.project.name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+		<war destfile="${build.dir}/${ant.project.name}.war" needxmlfile="false">
 			<webinf dir="${web.dir}/WEB-INF" />
 			<lib dir="${lib.dir}/war" />
 		</war>

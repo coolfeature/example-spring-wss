@@ -1,37 +1,15 @@
 <ivy-module version="1.0">
-    <info 
-		organisation="uk.co.ionas.example.spring" 
-		module="wss-web"/>
+    <info organisation="uk.co.ionas.example.spring" module="wss-web"/>
     <configurations>
-    	<conf 
-			name="core" 
-			description="Core config"/>
-		<conf 
-			name="war"
-			extends="core"
-			description="WAR config"/>
-    	<conf 
-			name="test" 
-			extends="core" 
-			visibility="private" 	
-			description="Testing only"/>
+    	<conf name="core" description="Core config"/>
+		<conf name="war" extends="core" description="WAR config"/>
+    	<conf name="test" extends="core" visibility="private" description="Testing only"/>
     </configurations>
 	<publications>
-		<artifact 
-			name="wss-web" 
-			type="jar" 
-			ext="jar" 
-			conf="core" />
+		<artifact name="wss-web" type="jar" ext="jar" conf="core" />
     </publications>
     <dependencies>
-		<dependency 
-			name="wss-controller" 
-			rev="latest.integration" 
-			conf="core" />
-        <dependency 
-			org="junit" 				
-			name="junit"
-			rev="3.8" 
-			conf="test->default"/>
+		<dependency name="wss-controller" rev="latest.integration" conf="core" />
+        <dependency org="junit" name="junit" rev="3.8" conf="test->default"/>
     </dependencies>
 </ivy-module>

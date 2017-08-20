@@ -69,8 +69,16 @@
         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="lib.path.id" debug="true" includeAntRuntime="false"/>
     </target>
 	
+	
+	<!-- Copy *.xml or *.properties from ${resources.dir} to ${web.classes.dir} -->
+	<target name="copy-resources" description="copy Java resources like xml and properties files">
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.main.rsc}" />
+		</copy>
+	</target>
+	
 	<!-- PUBLISH -->
-    <target name="jar" depends="version, compile" description="--> make a jar file for this project">
+    <target name="jar" depends="version, compile, copy-resources" description="--> make a jar file for this project">
         <jar destfile="${jar.file}">
             <fileset dir="${classes.dir}" />
             <manifest>
